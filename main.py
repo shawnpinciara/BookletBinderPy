@@ -5,7 +5,7 @@ from PIL import Image
 import os
 
 #pdf name
-pdf_name = 'DIY.pdf'
+pdf_name = './src/Booklet.pdf'
 
 def a4_to_2_a5():
     images = convert_from_path(pdf_path=pdf_name,first_page=111+17,last_page=141+17)
@@ -23,19 +23,38 @@ def a4_to_2_a5():
             dst.paste(im2, (0, im1.height))
             dst.resize((595, 842))
             images_concat.append(dst)
-
     #reverse option
-    imsave = Image.new('RGB', (im1.width, im1.height * 2))
-    images_concat.append(dst)
-    print(len(images_concat))
-    for i in range((int(len(images_concat)/2)) -1):
-        images_concat_inverse.append(images_concat[i])
-        images_concat_inverse.append(images_concat[len(images_concat)-i-1].rotate(180,expand=True))
-    images_concat = images_concat_inverse
-    #END OF REVERSE OPTION
-    
+    # imsave = Image.new('RGB', (im1.width, im1.height * 2))
+    # images_concat.append(dst)
+    # print(len(images_concat))
+    # for i in range((int(len(images_concat)/2)) -1):
+    #     images_concat_inverse.append(images_concat[i])
+    #     images_concat_inverse.append(images_concat[len(images_concat)-i-1].rotate(180,expand=True))
+    # images_concat = images_concat_inverse
+    #END OF REVERSE OPTION   
     imsave = Image.new('RGB', (im1.width, im1.height * 2))
     imsave.save('concat.pdf', save_all=True, append_images=images_concat)
 
+def booklet(pliques_len):
+    images_concat = []
+    images = convert_from_path(pdf_path=pdf_name,first_page=0,last_page=10)
+    images = [image.rotate(90,expand=True) for image in images]
+    for j in range(1,int(len(images)/pliques_len)):
+        for i in range(0,(j*pliques_len) -1):
+            #print(i)
+            im1 = images[(j*pliques_len)+i]
+            im2 = images[(j*pliques_len)-(len(images)-i)]
+            dst = Image.new('RGB', (im1.width, im1.height * 2))
+            dst.paste(im1, (0, 0))
+            dst.paste(im2, (0, im1.height))
+            dst.resize((595, 842))
+            images_concat.append(dst)
 
-a4_to_2_a5()
+        #TODO: gestire il caso in cui non è un multiplo di 10
+        #SE le pagine finali sono meno di 10: aggiungi pagine bianche sino ad arrivare ad un multiplo di due
+
+    imsave = Image.new('RGB', (images[0].width, images[0].height * 2))
+    imsave.save('concat.pdf', save_all=True, append_images=images_concat)
+
+booklet(10)
+#a4_to_2_a5()
