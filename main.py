@@ -35,26 +35,37 @@ def a4_to_2_a5():
     imsave = Image.new('RGB', (im1.width, im1.height * 2))
     imsave.save('concat.pdf', save_all=True, append_images=images_concat)
 
+def single_booklet(images_array):
+    final_images_arr = []
+    for i in range(0,int(len(images_array)/2)-1):
+        print(i)
+        im1 = images_array[i]
+        im2 = images_array[len(images_array)-1-i]
+        dst = Image.new('RGB', (images_array[0].width, images_array[0].height * 2))
+        dst.paste(im1, (0, 0))
+        dst.paste(im2, (0, im1.height))
+        dst.resize((595, 842))
+        final_images_arr.append(dst)
+    # print(final_images_arr)
+    return final_images_arr
 def booklet(pliques_len):
     images_concat = []
     images = convert_from_path(pdf_path=pdf_name,first_page=0,last_page=10)
     images = [image.rotate(90,expand=True) for image in images]
-    for j in range(1,int(len(images)/pliques_len)):
-        for i in range(0,(j*pliques_len) -1):
-            #print(i)
-            im1 = images[(j*pliques_len)+i]
-            im2 = images[(j*pliques_len)-(len(images)-i)]
-            dst = Image.new('RGB', (im1.width, im1.height * 2))
-            dst.paste(im1, (0, 0))
-            dst.paste(im2, (0, im1.height))
-            dst.resize((595, 842))
-            images_concat.append(dst)
-
+    #int(len(images)/pliques_len)
+    
+    um = images[0:9] 
+    ima = single_booklet(um)
+    for im in ima:
+        images_concat.append(im)
+    
         #TODO: gestire il caso in cui non è un multiplo di 10
         #SE le pagine finali sono meno di 10: aggiungi pagine bianche sino ad arrivare ad un multiplo di due
 
     imsave = Image.new('RGB', (images[0].width, images[0].height * 2))
     imsave.save('concat.pdf', save_all=True, append_images=images_concat)
+
+
 
 booklet(10)
 #a4_to_2_a5()
