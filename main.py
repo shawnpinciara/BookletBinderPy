@@ -37,10 +37,14 @@ def a4_to_2_a5():
 
 def single_booklet(images_array):
     final_images_arr = []
-    for i in range(0,int(len(images_array)/2)-1):
+    for i in range(0,int(len(images_array)/2)):
         print(i)
-        im1 = images_array[i]
-        im2 = images_array[len(images_array)-1-i]
+        if i%2==0:
+            im1 = images_array[i]
+            im2 = images_array[len(images_array)-1-i]
+        else:
+            im2 = images_array[i]
+            im1 = images_array[len(images_array)-1-i]
         dst = Image.new('RGB', (images_array[0].width, images_array[0].height * 2))
         dst.paste(im1, (0, 0))
         dst.paste(im2, (0, im1.height))
@@ -48,24 +52,32 @@ def single_booklet(images_array):
         final_images_arr.append(dst)
     # print(final_images_arr)
     return final_images_arr
-def booklet(pliques_len):
+
+def booklet(pliques_len,total_pages_of_book):
     images_concat = []
-    images = convert_from_path(pdf_path=pdf_name,first_page=0,last_page=10)
-    images = [image.rotate(90,expand=True) for image in images]
-    #int(len(images)/pliques_len)
-    
-    um = images[0:9] 
-    ima = single_booklet(um)
-    for im in ima:
-        images_concat.append(im)
-    
+    if total_pages_of_book % 10!=0:
+        total_pages_of_book += 10-(total_pages_of_book%10)
+    und = 0;
+    while (und < total_pages_of_book):
+        images = convert_from_path(pdf_path=pdf_name,first_page=und,last_page=und+10)
+        images = [image.rotate(90,expand=True) for image in images]
+        #int(len(images)/pliques_len)
         #TODO: gestire il caso in cui non è un multiplo di 10
         #SE le pagine finali sono meno di 10: aggiungi pagine bianche sino ad arrivare ad un multiplo di due
+        ind = 0
+        while(ind < 20):
+            um = images[ind:ind+10] 
+            ima = single_booklet(um)
+            for im in ima:
+                images_concat.append(im)
+            ind += 10
+    und+=10
+    
 
     imsave = Image.new('RGB', (images[0].width, images[0].height * 2))
     imsave.save('concat.pdf', save_all=True, append_images=images_concat)
 
 
 
-booklet(10)
+booklet(10,23)
 #a4_to_2_a5()
