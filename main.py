@@ -71,7 +71,7 @@ def booklet(pliques_len,total_pages_of_book):
             for im in ima:
                 images_concat.append(im)
             ind += 10
-    und+=10
+        und+=10
     
 
     imsave = Image.new('RGB', (images[0].width, images[0].height * 2))
