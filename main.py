@@ -33,7 +33,8 @@ def a4_to_2_a5():
     # images_concat = images_concat_inverse
     #END OF REVERSE OPTION   
     imsave = Image.new('RGB', (im1.width, im1.height * 2))
-    imsave.save('concat.pdf', save_all=True, append_images=images_concat)
+    imsave.paste(images_concat[0],(0,0))
+    imsave.save('concat.pdf', save_all=True, append_images=images_concat[1:])
 
 def single_booklet(images_array):
     final_images_arr = []
@@ -55,29 +56,34 @@ def single_booklet(images_array):
 
 def booklet(pliques_len,total_pages_of_book):
     images_concat = []
-    if total_pages_of_book % 10!=0:
-        total_pages_of_book += 10-(total_pages_of_book%10)
+    if total_pages_of_book % pliques_len!=0:
+        total_pages_of_book += pliques_len-(total_pages_of_book%pliques_len)
     und = 0;
     while (und < total_pages_of_book):
-        images = convert_from_path(pdf_path=pdf_name,first_page=und,last_page=und+10)
+        images = convert_from_path(pdf_path=pdf_name,first_page=und,last_page=und+pliques_len)
         images = [image.rotate(90,expand=True) for image in images]
+        # if (len(images)-und < 10):
+        #     print("Libro con pagine diverse da un multiplo di 10")
+        #     im_to_append = Image.new('RGB', (images[0].width, images[0].height), color=(255,255,255))
+        #     for k in range(10-(total_pages_of_book-und)):
+        #         images.append(im_to_append)
+        #         und-=20 #riavvolgere und in modo che possa andare ancora avanti
         #int(len(images)/pliques_len)
-        #TODO: gestire il caso in cui non è un multiplo di 10
-        #SE le pagine finali sono meno di 10: aggiungi pagine bianche sino ad arrivare ad un multiplo di due
         ind = 0
-        while(ind < 20):
-            um = images[ind:ind+10] 
+        while(ind < pliques_len*2):
+            um = images[ind:ind+pliques_len] 
             ima = single_booklet(um)
             for im in ima:
                 images_concat.append(im)
-            ind += 10
-        und+=10
+            ind += pliques_len
+        und+=pliques_len
     
 
-    imsave = Image.new('RGB', (images[0].width, images[0].height * 2))
-    imsave.save('concat.pdf', save_all=True, append_images=images_concat)
+    imsave = Image.new('RGB', (images[0].width, images[0].height * 2),color=(139,7,200))
+    imsave.paste(images_concat[0],(0,0))
+    imsave.save('concat.pdf', save_all=True, append_images=images_concat[1:])
 
 
 
-booklet(10,23)
-#a4_to_2_a5()
+# booklet(10,23)
+a4_to_2_a5()
