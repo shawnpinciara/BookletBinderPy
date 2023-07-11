@@ -5,11 +5,11 @@ Based on the libraries:
 - Pillow
 
 ## Working:
-Specify the *pdf_name* and call one of these dunctions:
-### booklet(pliques_len)
+Specify the *pdf_name* and call one of these functions:
+### booklet(pliques_len,book_size)
 ![Booklet](./images/booklet.jpg)
-Convert the pdf into smaller booklets, print them, fold the booklets and bind them into the fool book.
-Specify the *pliques_len* which is the number of pages every booklet should contain (recommended 10, or multiples of 4)
+Convert the pdf into smaller booklets, print them, fold the booklets and bind them into a full book.
+Specify the *pliques_len* which is the number of pages every booklet should contain (recommended 10, or multiples of 4) and the *book_lenght* which is how many pages the book has
 
 ### ~a4_to_2_a5()~ NOT WORKING RIGHT NOW
 ![pdftoa5](./images/pdf_to_a5.jpg)
