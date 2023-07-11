@@ -4,8 +4,6 @@ import math
 from PIL import Image
 import os
 
-#pdf name
-pdf_name = './src/Booklet.pdf'
 
 def a4_to_2_a5():
     images = convert_from_path(pdf_path=pdf_name,first_page=111+17,last_page=141+17)
@@ -84,6 +82,13 @@ def booklet(pliques_len,total_pages_of_book):
     imsave.save('concat.pdf', save_all=True, append_images=images_concat[1:])
 
 
+#pdf name
+pdf_name = './src/Booklet.pdf'
 
-# booklet(10,23)
-a4_to_2_a5()
+#booklet takes this 2 parameters:
+# - number of pages per single booklet
+# - lenght of book
+booklet(10,23)
+
+#a4_to_2_a5 takes no parameters:
+#a4_to_2_a5()
